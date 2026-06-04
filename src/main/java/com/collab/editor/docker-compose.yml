@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+
+  mongodb:
+    image: mongo:7.0
+    container_name: collab-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: collab_db
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: collab-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+
+  app:
+    build: .
+    container_name: collab-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: collab_db
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+    depends_on:
+      - mongodb
+      - redis
+
+volumes:
+  mongo-data:
+  redis-data:
