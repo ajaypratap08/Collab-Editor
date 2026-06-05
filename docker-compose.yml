@@ -24,7 +24,7 @@ services:
     command: redis-server --appendonly yes
 
   app:
-    build: .
+    build: src/main/java/com/collab/editor
     container_name: collab-app
     restart: unless-stopped
     ports:
