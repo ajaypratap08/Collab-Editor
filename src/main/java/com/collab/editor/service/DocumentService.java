@@ -37,6 +37,16 @@ public class DocumentService {
     }
 
     /**
+     * List all documents owned by a specific user — this is what the
+     * dashboard calls to show "your documents". Scoped by ownerId rather
+     * than returning every document in the database, since the frontend
+     * will call this per logged-in user.
+     */
+    public List<Document> getDocumentsForOwner(String ownerId) {
+        return documentRepository.findByOwnerId(ownerId);
+    }
+
+    /**
      * Core method — called every time a user sends an operation.
      * 1. Fetch concurrent ops (applied since client's baseVersion)
      * 2. OT-transform the incoming op

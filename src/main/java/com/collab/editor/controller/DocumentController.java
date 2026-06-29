@@ -40,6 +40,14 @@ public class DocumentController {
         log.info("Created document '{}' for owner '{}'", title, ownerId);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
+    // GET /api/documents?ownerId=user123
+    // Lists all documents owned by a given user — used by the dashboard
+    @GetMapping
+    public ResponseEntity<List<Document>> getAllDocuments(
+            @RequestParam String ownerId) {
+        List<Document> docs = documentService.getDocumentsForOwner(ownerId);
+        return ResponseEntity.ok(docs);
+    }
 
     // GET /api/documents/{id}
     @GetMapping("/{id}")
